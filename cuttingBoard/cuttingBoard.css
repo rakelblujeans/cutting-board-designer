@@ -1,0 +1,125 @@
+.app-content {
+  padding: 0 40px 40px 40px;
+}
+
+.parameters {
+  padding-bottom: 15px;
+}
+
+.parameter {
+  margin-bottom: 5px;
+}
+
+.parameter label {
+  display: inline-block;
+  width: 150px;
+}
+
+.parameter input {
+  width: 50px;
+}
+
+.boardHeader {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 15px;
+}
+
+.boardHeaderCol {
+  width: 50%;
+}
+
+.gu-transit {
+  opacity: 50%;
+}
+
+/* 1 inch = 30px; */
+
+.endGrain, .edgeGrain {
+  margin: 20px 0;
+  padding: 0px 15px 15px 15px;
+  border: 1px solid grey;
+  background-color: #F5F3EC;
+  display: inline-block;
+  min-width: 900px;
+}
+
+.layer {
+  width: 100%;
+  height: 30px;
+}
+
+.layerWrapper {
+  display: inline-block;
+}
+
+.layerLabel {
+  vertical-align: top;
+}
+
+.layer select {
+  margin-bottom: 5px;
+  vertical-align: top;
+}
+
+.layer button {
+  display: block;
+  vertical-align: top;
+}
+
+.woodBlock {
+  display: inline-block;
+  height: 100%;
+  margin-left: -1px;
+}
+
+.woodBlock:last-child {
+  margin-right: 15px;
+}
+
+.borders {
+  border: 1px solid black;
+}
+
+.lastLayer {
+  border-bottom: 1px solid black;
+}
+
+.edgeGrain .woodBlock {
+  border-bottom: none;
+}
+
+.removeBtn {
+  display: inline-block;
+  vertical-align: top;
+  height: 25px;
+}
+.addLayerBtn {
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.edgeGrain .board {
+  margin-left: 250px;
+}
+
+.materialList ul {
+  list-style: none;
+  margin: none;
+}
+
+.license {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: grey;
+}
+
+.licenseContent {
+  padding: 20px;
+  background-color: white;
+  margin: 5% auto auto auto;
+  width: 75%;
+}
