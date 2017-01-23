@@ -1,0 +1,175 @@
+<div class="app-content">
+  <h1>~ Design your dream cutting board ~</h1>
+
+  <div class="boardHeader">
+    <div class="boardHeaderCol parameters">
+      <h3>Board Properties</h3>
+      <div class="parameter">
+        <label for="numLayers"># Layers:</label>
+        <input type="text" name="numLayers"
+            ng-model="designer.board.layers.length">
+      </div>
+      <div class="parameter">
+        <label for="thickness">Board thickness:</label>
+        <input type="text" name="thickness"
+            ng-model="designer.board.thickness"> in
+      </div>
+      <div class="parameter">
+        <label for="length">Board length:</label>
+        <input type="text" name="length"
+            ng-model="designer.board.boardLength"> in
+      </div>
+      <div class="parameter">
+        <label for="showBorders">Show borders:</label>
+        <input type="checkbox" name="showBorders"
+            ng-model="designer.board.showBorders">
+      </div>
+      <button class="clearBtn" ng-click="designer.clear()">
+        Clear All
+      </button>
+    </div>
+
+    <div class="boardHeaderCol materialList">
+      <h3>Material List</h3>
+      <div>Total length: {{designer.board.boardLength}} in</div>
+      <div>Wood Widths:</div>
+      <ul>
+        <li ng-repeat="(k, v) in designer.getMaterialList() track by $index">
+          {{k}} - {{v}} in
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="endGrain">
+    <h3>Edge Grain Board</h3>
+    <div class="boardHeader">
+      <div class="boardHeaderCol parameters">
+        <strong>Properties</strong>
+        <div class="parameter">
+          <label for="bladeKerf">Blade Kerf:</label>
+          <input type="text" name="bladeKerf"
+              ng-model="designer.board.edgeGrain.bladeKerf"> in
+        </div>
+      </div>
+
+      <div class="boardHeaderCol measurements">
+        <strong>Measurements</strong>
+        <div class="measurement">Length: {{designer.board.boardLength}} in</div>
+        <div class="measurement">Width: {{designer.board.layers.length}} in</div>
+        <div class="measurement">Thickness: {{designer.board.thickness}} in</div>
+      </div>
+    </div>
+
+    <div class="board">
+      <small><em>
+        Note: You can rearrange by clicking + dragging 'wood type' horizontally.
+      </em></small>
+      <div dragula='"bag-layer"' dragula-model="designer.board.layers">
+        <div class="layer" ng-repeat="layer in designer.board.layers track by $index">
+          <div class="btn removeBtn" ng-click="designer.removeLayer($index)">
+            <span class="fa-stack">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-times fa-stack-1x fa-inverse" aria-hidden="true"></i>
+            </span>
+          </div>
+          <span class="layerLabel handle">Wood type:</span>
+          <select name="woodTypes" ng-options="wood.name for wood in designer.woodTypes track by wood.name"
+              ng-model="designer.board.layers[$index].wood">
+          </select>
+
+          <div class="woodBlock" ng-style="{
+              'background-color': designer.board.layers[$index].wood.color,
+              'width': designer.board.boardLength * 30 + 'px',
+            }"
+            ng-class="{'borders': designer.board.showBorders}"
+            ng-if="designer.board.layers[$index].wood">
+          </div>
+        </div>
+      </div>
+
+      <button class="addLayerBtn" ng-click="designer.addLayer()">
+        Add Layer
+      </button>
+    </div>
+  </div>
+
+  <div class="edgeGrain">
+    <h3>End Grain Board</h3>
+    <div class="boardHeader">
+      <div class="boardHeaderCol parameters">
+        <strong>Properties</strong>
+        <div class="parameter">
+          <label for="crosscutWidth">Crosscut width:</label>
+          <input type="text" name="crosscutWidth"
+              ng-model="designer.board.endGrain.crosscutWidth"> in
+        </div>
+        <div class="parameter">
+          <label for="isFlipped">Flip alternate rows:</label>
+          <input type="checkbox" name="isFlipped"
+              ng-model="designer.board.isFlipped">
+        </div>
+      </div>
+
+      <div class="boardHeaderCol measurements">
+        <strong>Measurements</strong>
+        <div class="measurement">Length: {{designer.endGrainLength()}} in</div>
+        <div class="measurement">Width: {{designer.board.layers.length}} in</div>
+        <div class="measurement">Thickness: {{designer.board.endGrain.crosscutWidth}} in</div>
+        <div class="measurement"># of strips: {{designer.board.endGrain.numStrips}}</div>
+      </div>
+    </div>
+
+    <div class="board">
+      <div class="layer" ng-repeat="layer in designer.board.layers track by $index">
+        <div class="woodBlock" ng-style="{
+            'background-color': designer.getEndGrainStripColor($parent.$index, $index, $odd),
+            'width': designer.board.thickness * 30 + 'px',
+          }"
+          ng-class="{
+            'borders': designer.board.showBorders,
+            'lastLayer': $parent.$index === designer.board.layers.length - 1
+          }"
+          ng-repeat="strip in designer.getEndGrainStrips() track by $index">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="footer">
+  Created by: Raquel Bujans,
+  Licensed under <a href="#" ng-click="designer.showLicense($event)">MIT License </a>
+  <div class="license" ng-if="designer.licenseVisible">
+    <div class="licenseContent">
+      <p>MIT License</p>
+
+      <p>Copyright (c) 2017 Raquel Bujans</p>
+
+      <p>
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+      </p>
+      <p>
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+      </p>
+      <p>
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+      </p>
+      <button ng-click="designer.closeLicense()">Close</button>
+    </div>
+  </div>
+</div>
