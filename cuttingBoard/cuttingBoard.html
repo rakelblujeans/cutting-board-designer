@@ -1,6 +1,11 @@
 <div class="app-content">
   <h1>~ Design your dream cutting board ~</h1>
 
+  <small class="instructions"><em>
+    Add some layers and try setting each layer to a different wood type. Play with the
+    dimensions up above and view how it affects your over-all pattern.
+  </em></small>
+
   <hr class="thinHR">
 
   <div class="controls">
@@ -144,7 +149,6 @@
           }"
           ng-class="{
             'borders': designer.board.showBorders,
-            'lastLayer': $parent.$index === designer.board.layers.length - 1
           }"
           ng-repeat="strip in designer.getEndGrainStrips() track by $index">
         </div>
@@ -156,7 +160,7 @@
 </div>
 
 <div class="footer">
-  Created by: Raquel Bujans,
+  Created by: Raquel Bujans + Kerry Ramphal ~
   Licensed under <a href="#" ng-click="designer.showLicense($event)">MIT License </a>
   <div class="license" ng-if="designer.licenseVisible">
     <div class="licenseContent">

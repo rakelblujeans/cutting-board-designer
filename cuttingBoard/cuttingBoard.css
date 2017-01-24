@@ -78,6 +78,10 @@
   margin-right: 15px;
 }
 
+.layer:last-child .woodBlock {
+  border-bottom: 1px solid black;
+}
+
 .borders {
   border: 1px solid black;
 }
@@ -176,4 +180,11 @@
 
 .thinHR {
   margin: 5px 0;
+}
+
+
+.footer {
+  width: 900px;
+  text-align: center;
+  margin-bottom: 15px;
 }
