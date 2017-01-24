@@ -1,6 +1,25 @@
 <div class="app-content">
   <h1>~ Design your dream cutting board ~</h1>
 
+  <hr class="thinHR">
+
+  <div class="controls">
+    <button class="btn btn--block clearBtn" ng-click="designer.onClearClick()">
+      Clear
+    </button>
+    <button class="btn btn--block saveBtn" ng-click="designer.onSaveClick()">
+      Save
+    </button>
+    <div class="loadFileWrapper">
+      <label for="loadFile">Load a saved design:</label>
+      <input type="file" class="loadFile" type="designer.uploadedFile"
+          onchange="angular.element(this).scope().designer.readText(this)"
+          ng-model="designer.file">
+    </div>
+  </div>
+
+  <hr class="thinHR">
+
   <div class="boardHeader">
     <div class="boardHeaderCol parameters">
       <h3>Board Properties</h3>
@@ -24,9 +43,6 @@
         <input type="checkbox" name="showBorders"
             ng-model="designer.board.showBorders">
       </div>
-      <button class="clearBtn" ng-click="designer.clear()">
-        Clear All
-      </button>
     </div>
 
     <div class="boardHeaderCol materialList">
@@ -63,7 +79,7 @@
 
     <div class="board">
       <small><em>
-        Note: You can rearrange by clicking + dragging 'wood type' horizontally.
+        Note: You can rearrange by clicking + dragging 'wood' horizontally.
       </em></small>
       <div dragula='"bag-layer"' dragula-model="designer.board.layers">
         <div class="layer" ng-repeat="layer in designer.board.layers track by $index">
@@ -73,7 +89,7 @@
               <i class="fa fa-times fa-stack-1x fa-inverse" aria-hidden="true"></i>
             </span>
           </div>
-          <span class="layerLabel handle">Wood type:</span>
+          <span class="layerLabel handle">Wood:</span>
           <select name="woodTypes" ng-options="wood.name for wood in designer.woodTypes track by wood.name"
               ng-model="designer.board.layers[$index].wood">
           </select>
@@ -88,7 +104,7 @@
         </div>
       </div>
 
-      <button class="addLayerBtn" ng-click="designer.addLayer()">
+      <button class="btn btn--block addLayerBtn" ng-click="designer.addLayer()">
         Add Layer
       </button>
     </div>

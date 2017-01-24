@@ -9,6 +9,9 @@
   * Layer definition
   * - woodBlock
   *
+  * API:
+  * - save/load board design to/from text file
+  *
   */
 
 angular.module('myApp.cuttingBoard', ['ngRoute'])
@@ -49,7 +52,6 @@ angular.module('myApp.cuttingBoard', ['ngRoute'])
   };
 
   this.board = Object.assign({}, defaultBoard);
-
   this.woodTypes = [
     {
       name: 'Maple',
@@ -88,12 +90,6 @@ angular.module('myApp.cuttingBoard', ['ngRoute'])
     // }
   });
 
-  // this.$scope
-  // .$on('bag-layer.drop-model', function (e, el) {
-    // el.removeClass('drop-model', e, el);
-    // console.log(e, el, this.board && this.board.layers);
-  // });
-
   this.addLayer = function() {
     this.board.layers.push({});
   };
@@ -124,6 +120,10 @@ angular.module('myApp.cuttingBoard', ['ngRoute'])
 
   this.getMaterialList = function() {
     const materials = {};
+    if (!this.board || !!this.board.layers) {
+      return materials;
+    }
+
     for (let i = 0; i < this.board.layers.length; i++) {
       if (this.board.layers[i].wood) {
         if (!materials[this.board.layers[i].wood.name]) {
@@ -138,7 +138,7 @@ angular.module('myApp.cuttingBoard', ['ngRoute'])
     return materials;
   };
 
-  this.clear = function() {
+  this.onClearClick = function() {
     this.board = Object.assign({}, defaultBoard);
     this.board.layers = [];
   };
@@ -152,23 +152,70 @@ angular.module('myApp.cuttingBoard', ['ngRoute'])
     this.licenseVisible = false;
   }
 
-  // console.log(pouchDB);
-  // const db = pouchDB('cuttingBoard');
-  // var doc = { name: 'board1' };
+  this.onSaveClick = function() {
+    var jsonData = JSON.stringify(this.board);
+    download(jsonData, 'boardDesign.txt', 'text/plain');
+  };
 
-  // function error(err) {
-  //   $log.error(err);
-  // }
+  function download(text, name, type) {
+    var a = document.createElement("a");
+    var file = new Blob([text], {type: type});
+    a.href = URL.createObjectURL(file);
+    a.download = name;
+    a.click();
+  }
 
-  // function get(res) {
-  //   if (!res.ok) {
-  //     return error(res);
-  //   }
-  //   return db.get(res.id);
-  // }
 
-  // function bind(res) {
-  //   $scope.doc = res;
-  // }
+  /**
+   * Check for the various File API support.
+   */
+  this.checkFileAPI = function() {
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+      this.reader = new FileReader();
+      return true;
+    } else {
+      alert('The File APIs are not fully supported by your browser. Fallback required.');
+      return false;
+    }
+  }
+  this.checkFileAPI();
+
+  /**
+   * read text input
+   */
+  this.readText = function(filePath) {
+    var output = ''; // placeholder for text output
+    if(filePath.files && filePath.files[0]) {
+      var self = this;
+      this.reader.onload = function (e) {
+        output = e.target.result;
+        self.board = JSON.parse(output);
+        self.$scope.$applyAsync();
+      }; // end onload()
+      this.reader.readAsText(filePath.files[0]);
+    } // end if html5 filelist support
+    else if (ActiveXObject && filePath) { //fallback to IE 6-8 support via ActiveX
+      try {
+        this.reader = new ActiveXObject('Scripting.FileSystemObject');
+        var file = this.reader.OpenTextFile(filePath, 1); //ActiveX File Object
+        output = file.ReadAll(); //text contents of file
+        file.Close(); //close file "input stream"
+        self.board = JSON.parse(output);
+        self.$scope.$applyAsync();
+      } catch (e) {
+        if (e.number == -2146827859) {
+          alert('Unable to access local files due to browser security settings. ' +
+           'To overcome this, go to Tools->Internet Options->Security->Custom Level. ' +
+           'Find the setting for "Initialize and script ActiveX controls not marked as safe" and ' +
+           'change it to "Enable" or "Prompt"');
+        }
+      }
+    }
+    else { // this is where you could fallback to Java Applet, Flash or similar
+      return false;
+    }
+
+    return true;
+  }
 
 }]);
