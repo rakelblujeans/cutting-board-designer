@@ -40,7 +40,15 @@ angular.module('myApp.cuttingBoard', ['ngRoute'])
     showBorders: true,
     bladeKerf: 0.125,
     isFlipped: false,
-    layers: [{},{},{},{},{},{},{},{},{}], // Each layer is assumed to be 1 inch
+    layers: [
+      {width: 1},
+      {width: 1},
+      {width: 1},
+      {width: 1},
+      {width: 1},
+      {width: 1},
+      {width: 1}
+    ],
     edgeGrain: {
       boardLength: 19,
       thickness: 1.5,

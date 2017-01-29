@@ -98,10 +98,13 @@
           <select name="woodTypes" ng-options="wood.name for wood in designer.woodTypes track by wood.name"
               ng-model="designer.board.layers[$index].wood">
           </select>
+          <input class="" type="text" name="width" ng-model="designer.board.layers[$index].width">
+          <span class="layerLabel handle">in</span>
 
           <div class="woodBlock" ng-style="{
               'background-color': designer.board.layers[$index].wood.color,
               'width': designer.board.edgeGrain.boardLength * 30 + 'px',
+              'height': designer.board.layers[$index].width * 30 + 'px'
             }"
             ng-class="{'borders': designer.board.showBorders}"
             ng-if="designer.board.layers[$index].wood">
@@ -142,10 +145,13 @@
     </div>
 
     <div class="board">
-      <div class="layer" ng-repeat="layer in designer.board.layers track by $index">
+      <div class="layer" ng-repeat="layer in designer.board.layers track by $index"
+          ng-style="{
+            'height': designer.board.layers[$index].width * 30 + 'px'
+          }">
         <div class="woodBlock" ng-style="{
             'background-color': designer.getEndGrainStripColor($parent.$index, $index, $odd),
-            'width': designer.board.edgeGrain.thickness * 30 + 'px',
+            'width': designer.board.edgeGrain.thickness * 30 + 'px'
           }"
           ng-class="{
             'borders': designer.board.showBorders,
