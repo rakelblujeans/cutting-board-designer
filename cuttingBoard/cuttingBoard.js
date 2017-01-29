@@ -38,15 +38,15 @@ angular.module('myApp.cuttingBoard', ['ngRoute'])
   const defaultBoard = {
     measurementSystem: 'imperial',
     showBorders: true,
-    thickness: 1.5,
-    boardLength: 19,
+    bladeKerf: 0.125,
     isFlipped: false,
-    layers: [{},{},{},{},{},{},{}], // Each layer is assumed to be 1 inch
+    layers: [{},{},{},{},{},{},{},{},{}], // Each layer is assumed to be 1 inch
     edgeGrain: {
-      bladeKerf: 0.125
+      boardLength: 19,
+      thickness: 1.5,
     },
     endGrain: {
-      numStrips: 13, // TODO: why 13?
+      // numStrips: 13,
       crosscutWidth: 1.25
     }
   };
@@ -92,14 +92,22 @@ angular.module('myApp.cuttingBoard', ['ngRoute'])
 
   this.addLayer = function() {
     this.board.layers.push({});
+    this.calcEndGrainDimensions();
   };
 
   this.removeLayer = function(idx) {
     this.board.layers.splice(idx, 1);
+    this.calcEndGrainDimensions();
   };
 
   this.endGrainLength = function() {
-    return this.board.endGrain.numStrips * this.board.thickness;
+    return this.board.endGrain.numStrips * this.board.edgeGrain.thickness;
+  }
+
+  this.calcEndGrainDimensions = function() {
+    const stripWidth = this.board.endGrain.crosscutWidth + this.board.bladeKerf;
+    this.board.endGrain.numStrips = Math.floor(this.board.edgeGrain.boardLength / stripWidth);
+    this.board.endGrain.boardLength = this.board.endGrain.numStrips * this.board.edgeGrain.thickness;
   }
 
   this.getEndGrainStrips = function() {
@@ -130,7 +138,7 @@ angular.module('myApp.cuttingBoard', ['ngRoute'])
           // todo: all strips are the same width right now
           materials[this.board.layers[i].wood.name] = 1;
         } else {
-          materials[this.board.layers[i].wood.name] += 1 + this.board.edgeGrain.bladeKerf;
+          materials[this.board.layers[i].wood.name] += 1 + this.board.bladeKerf;
         }
       }
     }
@@ -178,7 +186,6 @@ angular.module('myApp.cuttingBoard', ['ngRoute'])
       return false;
     }
   }
-  this.checkFileAPI();
 
   /**
    * read text input
@@ -218,4 +225,7 @@ angular.module('myApp.cuttingBoard', ['ngRoute'])
     return true;
   }
 
+  // finish initialization
+  this.calcEndGrainDimensions();
+  this.checkFileAPI();
 }]);
