@@ -27,22 +27,7 @@
 
   <div class="boardHeader">
     <div class="boardHeaderCol parameters">
-      <h3>Board Properties</h3>
-      <div class="parameter">
-        <label for="numLayers"># Layers:</label>
-        <input type="text" name="numLayers"
-            ng-model="designer.board.layers.length">
-      </div>
-      <div class="parameter">
-        <label for="thickness">Board thickness:</label>
-        <input type="text" name="thickness"
-            ng-model="designer.board.thickness"> in
-      </div>
-      <div class="parameter">
-        <label for="length">Board length:</label>
-        <input type="text" name="length"
-            ng-model="designer.board.boardLength"> in
-      </div>
+      <h3>Settings</h3>
       <div class="parameter">
         <label for="showBorders">Show borders:</label>
         <input type="checkbox" name="showBorders"
@@ -52,7 +37,7 @@
 
     <div class="boardHeaderCol materialList">
       <h3>Material List</h3>
-      <div>Total length: {{designer.board.boardLength}} in</div>
+      <div>Total length: {{designer.board.edgeGrain.boardLength}} in</div>
       <div>Wood Widths:</div>
       <ul>
         <li ng-repeat="(k, v) in designer.getMaterialList() track by $index">
@@ -68,17 +53,32 @@
       <div class="boardHeaderCol parameters">
         <strong>Properties</strong>
         <div class="parameter">
+          <label for="numLayers"># Layers:</label>
+          <input type="text" name="numLayers"
+              ng-model="designer.board.layers.length" ng-blur="designer.calcEndGrainDimensions()">
+        </div>
+        <div class="parameter">
+          <label for="thickness">Board thickness:</label>
+          <input type="text" name="thickness" ng-blur="designer.calcEndGrainDimensions()"
+              ng-model="designer.board.edgeGrain.thickness"> in
+        </div>
+        <div class="parameter">
+          <label for="length">Board length:</label>
+          <input type="text" name="length" ng-blur="designer.calcEndGrainDimensions()"
+              ng-model="designer.board.edgeGrain.boardLength"> in
+        </div>
+        <div class="parameter">
           <label for="bladeKerf">Blade Kerf:</label>
-          <input type="text" name="bladeKerf"
-              ng-model="designer.board.edgeGrain.bladeKerf"> in
+          <input type="text" name="bladeKerf" ng-blur="designer.calcEndGrainDimensions()"
+              ng-model="designer.board.bladeKerf"> in
         </div>
       </div>
 
       <div class="boardHeaderCol measurements">
         <strong>Measurements</strong>
-        <div class="measurement">Length: {{designer.board.boardLength}} in</div>
+        <div class="measurement">Length: {{designer.board.edgeGrain.boardLength}} in</div>
         <div class="measurement">Width: {{designer.board.layers.length}} in</div>
-        <div class="measurement">Thickness: {{designer.board.thickness}} in</div>
+        <div class="measurement">Thickness: {{designer.board.edgeGrain.thickness}} in</div>
       </div>
     </div>
 
@@ -101,7 +101,7 @@
 
           <div class="woodBlock" ng-style="{
               'background-color': designer.board.layers[$index].wood.color,
-              'width': designer.board.boardLength * 30 + 'px',
+              'width': designer.board.edgeGrain.boardLength * 30 + 'px',
             }"
             ng-class="{'borders': designer.board.showBorders}"
             ng-if="designer.board.layers[$index].wood">
@@ -145,7 +145,7 @@
       <div class="layer" ng-repeat="layer in designer.board.layers track by $index">
         <div class="woodBlock" ng-style="{
             'background-color': designer.getEndGrainStripColor($parent.$index, $index, $odd),
-            'width': designer.board.thickness * 30 + 'px',
+            'width': designer.board.edgeGrain.thickness * 30 + 'px',
           }"
           ng-class="{
             'borders': designer.board.showBorders,
